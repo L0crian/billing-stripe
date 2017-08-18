@@ -817,9 +817,9 @@ window._ = __webpack_require__(11);
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(13);
+    window.$ = window.jQuery = __webpack_require__(13);
 
-  __webpack_require__(14);
+    __webpack_require__(14);
 } catch (e) {}
 
 /**
@@ -842,9 +842,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = Laracasts.csrfToken;
 
 if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /***/ }),
@@ -41786,7 +41786,7 @@ var Component = __webpack_require__(37)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "c:\\OpenServer\\domains\\billing\\resources\\assets\\js\\components\\CheckoutForm.vue"
+Component.options.__file = "c:\\OpenServer\\domains\\billing-stripe\\resources\\assets\\js\\components\\CheckoutForm.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] CheckoutForm.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41797,9 +41797,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-228d164d", Component.options)
+    hotAPI.createRecord("data-v-258cbddd", Component.options)
   } else {
-    hotAPI.reload("data-v-228d164d", Component.options)
+    hotAPI.reload("data-v-258cbddd", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41921,12 +41921,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['products'],
     data: function data() {
         return {
             'stripeEmail': '',
-            'stripeToken': ''
+            'stripeToken': '',
+            'product': '1'
         };
     },
     created: function created() {
@@ -41949,13 +41957,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         buy: function buy() {
+            var product = this.findProductById(this.product);
+
             this.stripe.open = {
-                name: "My Book",
-                discription: "Some book",
+                name: product.name,
+                description: product.description,
                 zipCode: true,
-                amount: 2500
+                amount: product.price
 
             };
+        },
+        findProductById: function findProductById(id) {
+            return this.products.find(function (product) {
+                return product.id == id;
+            });
         }
     }
 });
@@ -42010,7 +42025,34 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.stripeEmail = $event.target.value
       }
     }
-  }), _vm._v(" "), _c('button', {
+  }), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.product),
+      expression: "product"
+    }],
+    attrs: {
+      "name": "product"
+    },
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.product = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, _vm._l((_vm.products), function(product) {
+    return _c('option', {
+      domProps: {
+        "value": product.id
+      }
+    }, [_vm._v("\n            " + _vm._s(product.name) + " — $" + _vm._s(product.price) + "\n        ")])
+  })), _vm._v(" "), _c('button', {
     staticClass: "submit",
     on: {
       "click": function($event) {
@@ -42024,7 +42066,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-228d164d", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-258cbddd", module.exports)
   }
 }
 

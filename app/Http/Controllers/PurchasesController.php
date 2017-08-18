@@ -9,6 +9,8 @@ class PurchasesController extends Controller
 {
     public function store()
     {
+        $product = Product::findOrFail(request('product'));
+
         $customer = Customer::create([
             'email' => request('stripeEmail'),
             'source' => request('stripeToken')
@@ -16,7 +18,7 @@ class PurchasesController extends Controller
 
         Charge::create([
             'customer' => $customer->id,
-            'amount' => '2500',
+            'amount' => $product->price,
             'currency' => 'usd'
         ]);
 

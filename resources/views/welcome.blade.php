@@ -21,7 +21,7 @@
 <body>
 <div id="app">
 <h1>Buy</h1>
-<checkout-form :products = "{{$products}}"></checkout-form>
+<checkout-form :plans = "{{$plans}}"></checkout-form>
 </div>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="/js/app.js"></script>

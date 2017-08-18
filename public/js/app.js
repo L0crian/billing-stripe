@@ -842,7 +842,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = Laracasts.csrfToken;
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
@@ -41929,12 +41929,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['products'],
+    props: ['plans'],
     data: function data() {
         return {
             'stripeEmail': '',
             'stripeToken': '',
-            'product': '1'
+            'plan': '1'
         };
     },
     created: function created() {
@@ -41944,11 +41944,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             key: Laracasts.stripeKey,
             image: "https://stripe.com/img/documentation/checkout/marketplace.png",
             locale: "auto",
+            panelLabel: "Subscribe For",
             token: function token(_token) {
                 _this.stripeEmail = _token.email;
                 _this.stripeToken = _token.id;
 
-                _this.axios.post('/purchases', _this.$data).then(function (responce) {
+                axios.post('/subscriptions', _this.$data).then(function (responce) {
                     return alert('Complete');
                 });
             }
@@ -41956,20 +41957,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        buy: function buy() {
-            var product = this.findProductById(this.product);
-
-            this.stripe.open = {
-                name: product.name,
-                description: product.description,
+        subscribe: function subscribe() {
+            var plan = this.findPlanById(this.plan);
+            this.stripe.open({
+                name: plan.name,
+                description: plan.description,
                 zipCode: true,
-                amount: product.price
+                amount: plan.price
 
-            };
+            });
         },
-        findProductById: function findProductById(id) {
-            return this.products.find(function (product) {
-                return product.id == id;
+        findPlanById: function findPlanById(id) {
+            return this.plans.find(function (plan) {
+                return plan.id == id;
             });
         }
     }
@@ -41982,7 +41982,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('form', {
     attrs: {
-      "action": "/purchases",
+      "action": "/subscriptions",
       "method": "POST"
     }
   }, [_c('input', {
@@ -42029,11 +42029,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.product),
-      expression: "product"
+      value: (_vm.plan),
+      expression: "plan"
     }],
     attrs: {
-      "name": "product"
+      "name": "plan"
     },
     on: {
       "change": function($event) {
@@ -42043,24 +42043,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.product = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+        _vm.plan = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
       }
     }
-  }, _vm._l((_vm.products), function(product) {
+  }, _vm._l((_vm.plans), function(plan) {
     return _c('option', {
       domProps: {
-        "value": product.id
+        "value": plan.id
       }
-    }, [_vm._v("\n            " + _vm._s(product.name) + " — $" + _vm._s(product.price) + "\n        ")])
+    }, [_vm._v("\n            " + _vm._s(plan.name) + " — $" + _vm._s(plan.price / 100) + "\n        ")])
   })), _vm._v(" "), _c('button', {
     staticClass: "submit",
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.buy($event)
+        _vm.subscribe($event)
       }
     }
-  }, [_vm._v("Buy")])])
+  }, [_vm._v("Subscribe")])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

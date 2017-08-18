@@ -1,26 +1,26 @@
 <template>
-    <form action="/purchases" method="POST">
+    <form action="/subscriptions" method="POST">
         <input type="hidden" v-model="stripeToken" class="stripeToken">
         <input type="hidden" v-model="stripeEmail" class="stripeEmail">
 
-        <select name="product" v-model="product">
-            <option v-for="product in products" :value="product.id">
-                {{ product.name }} &mdash; ${{product.price}}
+        <select name="plan" v-model="plan">
+            <option v-for="plan in plans" :value="plan.id">
+                {{ plan.name }} &mdash; ${{plan.price/100}}
             </option>
         </select>
 
-        <button class="submit" @click.prevent="buy">Buy</button>
+        <button class="submit" @click.prevent="subscribe">Subscribe</button>
     </form>
 </template>
 
 <script>
     export default {
-        props: ['products'],
+        props: ['plans'],
         data() {
             return {
                 'stripeEmail': '',
                 'stripeToken': '',
-                'product': '1'
+                'plan': '1'
             }
         },
         created() {
@@ -28,30 +28,30 @@
                 key: Laracasts.stripeKey,
                 image: "https://stripe.com/img/documentation/checkout/marketplace.png",
                 locale: "auto",
+                panelLabel: "Subscribe For",
                 token: token => {
                     this.stripeEmail = token.email;
                     this.stripeToken = token.id;
 
-                    this.axios.post('/purchases', this.$data)
+                    axios.post('/subscriptions', this.$data)
                         .then(responce => alert('Complete'));
                 }
             });
         },
         methods: {
-            buy() {
-                let product = this.findProductById(this.product);
-
-                    this.stripe.open = ({
-                    name: product.name,
-                    description: product.description,
+            subscribe() {
+                let plan = this.findPlanById(this.plan);
+                    this.stripe.open({
+                    name: plan.name,
+                    description: plan.description,
                     zipCode: true,
-                    amount: product.price
+                    amount: plan.price
 
                 });
             },
 
-            findProductById(id) {
-                return this.products.find(product => product.id == id);
+            findPlanById(id) {
+                return this.plans.find(plan => plan.id == id);
             }
         }
     }

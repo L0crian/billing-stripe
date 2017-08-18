@@ -12,11 +12,15 @@ class SubscriptionsController extends Controller
     {
         $plan = Plan::findOrFail(request('plan'));
 
-        $customer = Customer::create([
-            'email' => request('stripeEmail'),
-            'source' => request('stripeToken'),
-            'plan' => $plan->name
-        ]);
+        try{
+            $customer = Customer::create([
+                'email' => request('stripeEmail'),
+                'source' => request('stripeToken'),
+                'plan' => $plan->name
+            ]);
+        } catch (\Exception $e) {
+            return responce()->json(['status' => $e->getmessage(), 422]);
+        }
 
         return 'All Done';
     }

@@ -11,6 +11,8 @@
 
         <button class="submit" @click.prevent="subscribe">Subscribe</button>
     </form>
+
+    <p class="danger" v-show="status" v-text=""status></p>
 </template>
 
 <script>
@@ -20,7 +22,8 @@
             return {
                 'stripeEmail': '',
                 'stripeToken': '',
-                'plan': '1'
+                'plan': '1',
+                'status': false
             }
         },
         created() {
@@ -34,7 +37,7 @@
                     this.stripeToken = token.id;
 
                     axios.post('/subscriptions', this.$data)
-                        .then(responce => alert('Complete'));
+                        .then(response => this.status = response.body.status);
                 }
             });
         },

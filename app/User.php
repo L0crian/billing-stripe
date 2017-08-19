@@ -28,15 +28,29 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function activate($customerId) {
+    public function forceFill($customerId) {
         $this->update([
             'stripe_id' => $customerId,
-            'stripe_active' => true
-        ]);
+            'stripe_active' => true,
+            'subscription_end_at' => null
+        ])->save();
+    }
+
+    public function deactivate()
+    {
+        return $this->forceFill([
+            'stripe_active' => false,
+            'subscription_end_at' => \Carbon\Carbon::now()
+        ])->save();
     }
 
     public function isSubscribed()
     {
         return !! $this->stripe_active;
+    }
+
+    public function subscription()
+    {
+        return new Subscription($this);
     }
 }

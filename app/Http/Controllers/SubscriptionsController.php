@@ -2,27 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegistrationForm;
 use App\Plan;
 use Illuminate\Http\Request;
-use Stripe\{Stripe, Charge, Customer};
+use Mockery\Exception;
+use Stripe\{
+    Stripe, Charge, Customer
+};
 
 class SubscriptionsController extends Controller
 {
-    public function store()
+    public function store(RegistrationForm $form)
     {
-        $plan = Plan::findOrFail(request('plan'));
-
-        try{
-            $customer = Customer::create([
-                'email' => request('stripeEmail'),
-                'source' => request('stripeToken'),
-                'plan' => $plan->name
-            ]);
-        } catch (\Exception $e) {
-            return responce()->json(['status' => $e->getmessage(), 422]);
+        try {
+            $form->save();
+        } catch (Exception $e) {
+            return response()->json(['status' => $e->getmessage(), 422]);
         }
-
-        request()->user()->activate($customer->id);
 
         return [
             'status' => 'Success!'

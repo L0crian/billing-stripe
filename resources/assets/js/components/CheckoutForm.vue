@@ -1,4 +1,5 @@
 <template>
+    <div>
     <form action="/subscriptions" method="POST">
         <input type="hidden" v-model="stripeToken" class="stripeToken">
         <input type="hidden" v-model="stripeEmail" class="stripeEmail">
@@ -13,6 +14,7 @@
     </form>
 
     <p class="danger" v-show="status" v-text=""status></p>
+    </div>
 </template>
 
 <script>
@@ -32,6 +34,7 @@
                 image: "https://stripe.com/img/documentation/checkout/marketplace.png",
                 locale: "auto",
                 panelLabel: "Subscribe For",
+                email: Laracasts.user.email,
                 token: token => {
                     this.stripeEmail = token.email;
                     this.stripeToken = token.id;

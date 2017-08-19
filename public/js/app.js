@@ -41929,6 +41929,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['plans'],
@@ -41948,6 +41950,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             image: "https://stripe.com/img/documentation/checkout/marketplace.png",
             locale: "auto",
             panelLabel: "Subscribe For",
+            email: Laracasts.user.email,
             token: function token(_token) {
                 _this.stripeEmail = _token.email;
                 _this.stripeToken = _token.id;
@@ -41982,7 +41985,101 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports={render:function(){},staticRenderFns:[]}
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('form', {
+    attrs: {
+      "action": "/subscriptions",
+      "method": "POST"
+    }
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.stripeToken),
+      expression: "stripeToken"
+    }],
+    staticClass: "stripeToken",
+    attrs: {
+      "type": "hidden"
+    },
+    domProps: {
+      "value": (_vm.stripeToken)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.stripeToken = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.stripeEmail),
+      expression: "stripeEmail"
+    }],
+    staticClass: "stripeEmail",
+    attrs: {
+      "type": "hidden"
+    },
+    domProps: {
+      "value": (_vm.stripeEmail)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.stripeEmail = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.plan),
+      expression: "plan"
+    }],
+    attrs: {
+      "name": "plan"
+    },
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.plan = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, _vm._l((_vm.plans), function(plan) {
+    return _c('option', {
+      domProps: {
+        "value": plan.id
+      }
+    }, [_vm._v("\n            " + _vm._s(plan.name) + " — $" + _vm._s(plan.price / 100) + "\n        ")])
+  })), _vm._v(" "), _c('button', {
+    staticClass: "submit",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.subscribe($event)
+      }
+    }
+  }, [_vm._v("Subscribe")])]), _vm._v(" "), _c('p', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.status),
+      expression: "status"
+    }],
+    staticClass: "danger",
+    attrs: {
+      "status": ""
+    }
+  })])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {

@@ -22,6 +22,10 @@ class SubscriptionsController extends Controller
             return responce()->json(['status' => $e->getmessage(), 422]);
         }
 
-        return 'All Done';
+        request()->user()->activate($customer->id);
+
+        return [
+            'status' => 'Success!'
+        ];
     }
 }

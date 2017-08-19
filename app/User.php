@@ -53,4 +53,8 @@ class User extends Authenticatable
     {
         return new Subscription($this);
     }
+
+    public static function byStripeId($stripeId) {
+        return static::where('stripe_id', $stripeId)->firstOrFail();
+    }
 }

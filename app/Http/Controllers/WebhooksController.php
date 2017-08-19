@@ -10,12 +10,23 @@ class WebhooksController extends Controller
     {
         $payload = request()->all();
 
-        if($payload['type'] == 'customer.subscription.deleted') {
-            $user = User::where('stripe_id', $payload['data']['object']['customer'])->firstOrFail();
+        $method = $this->eventToMethod($payload['type']);
 
-            $user->deactivate();
-
-            return response('Webhook Received');
+        if (method_exists($this, $method)) {
+            $this->$method($payload);
         }
+
+        return response('Webhook Received');
+    }
+
+    public function eventToMethod($event)
+    {
+        return 'when' . studly_case(str_replace('.', '_', $event));
+
+    }
+
+    public function whenCustomerSubscriptionDeleted($payload)
+    {
+        User::byStripeId($payload['data']['object']['customer'])->deactivate();
     }
 }
